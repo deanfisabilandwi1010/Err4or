@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 — Your Name</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script>
+    (function () {
+      var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+      if (coarse || window.innerWidth < 1024) document.documentElement.classList.add('gated');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@300;400;500&family=Saira+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-barba="wrapper" data-page="error">
+  <div class="gate" aria-hidden="true">
+    <div class="gate__logo" data-logo></div>
+    <p class="gate__msg">THE EXPERIENCE IS BEST VIEWED<br />WITH A DESKTOP</p>
+    <p class="gate__foot">SORRY, NOT SORRY</p>
+  </div>
+
+  <canvas class="grain" aria-hidden="true"></canvas>
+  <div class="wipe" aria-hidden="true"></div>
+
+  <main data-barba="container" data-barba-namespace="error" class="page page--error">
+    <div class="err" data-err>
+      <div class="err__frags" data-frags></div>
+      <pre class="err__ascii" data-ascii></pre>
+      <div class="err__panel">
+        <svg class="err__barcode" data-barcode viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <p>PROTOCOL WARNING</p>
+        <p class="err__code">404 // NOT FOUND</p>
+        <p>THE PAGE YOU ARE LOOKING FOR WAS NEVER HERE.</p>
+        <a href="/" class="err__back">RETURN TO INDEX +</a>
+      </div>
+      <div class="err__tear" data-tear></div>
+      <div class="err__scan"></div>
+    </div>
+  </main>
+
+  <footer class="bar" data-bar></footer>
+</body>
+</html>
