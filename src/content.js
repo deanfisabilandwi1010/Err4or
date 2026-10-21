@@ -7,7 +7,7 @@
    ========================================================================== */
 
 export const OWNER = {
-  name: 'YOUR NAME',
+  name: 'DEAN',
   role: 'DIGITAL DESIGNER',
   disciplines: ['ART DIRECTION', 'ANIMATION', 'CREATIVE DEVELOPMENT'],
   city: 'JAKARTA, ID',
@@ -121,7 +121,7 @@ export const FOOTER = {
   notes: [
     ['TO EXPERIMENT', 'IS A METHOD,', 'NOT A MOOD'],
     ['SAFE IDEAS', 'AGE FASTER', 'THAN ANY TREND'],
-    ['CURRENTLY LISTENING TO', '[SONG] BY [ARTIST]', 'DESIGN & CODE — YOUR NAME'],
+    ['CURRENTLY LISTENING TO', '[SONG] BY [ARTIST]', 'DESIGN & CODE — DEAN'],
   ],
   rights: 'ALL RIGHTS RESERVED',
 };
