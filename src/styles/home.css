@@ -1,0 +1,174 @@
+/* ==========================================================================
+   home.css — loader, block 01 (black room), the tear canvas, block 02 (white
+   room) and the footer (red room). Stacking, bottom to top:
+     b1 (1) < bg/tear (2) < b2 (3) < red multiply sheet (4) < footer (5)
+   <main> must stay a non-stacking element so the sheet on <body> can slot in.
+   ========================================================================== */
+
+.page--home { background: var(--c-black); }
+
+/* ---- LOADER ------------------------------------------------------------ */
+.loader { position: fixed; inset: 0; z-index: 100; background: var(--c-black); overflow: hidden; }
+.loader__copy { position: absolute; left: 4vw; top: 50%; transform: translateY(-50%); font-size: 10px; line-height: 1.5; }
+.loader__pct {
+  position: absolute; right: 16px; bottom: 28px;
+  font-family: var(--font-mono); font-size: 72px; line-height: 0.8; letter-spacing: -0.06em; font-weight: 300;
+}
+.loader__line { position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--c-red); transform: scaleX(0); transform-origin: left; }
+.loader__red { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--c-red); }
+.loader__white { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--c-black); }
+
+/* ---- BLOCK 01 ---------------------------------------------------------- */
+.b1 { position: fixed; inset: 0; z-index: 1; background: var(--c-black); }
+.b1__grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.3px);
+  background-size: 8px 8px;
+}
+.b1__fig { position: absolute; inset: 0; width: 100%; height: 100%; }
+.no-figure .b1__fig { display: none; }
+.no-figure .b1::after {
+  content: 'SIGNAL LOST // 3D UNAVAILABLE'; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%); color: var(--c-label);
+}
+
+.copy { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.copy__track { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+.copy__title { position: absolute; left: 0; right: 0; top: 0; font-size: 10px; font-weight: 400; text-align: center; }
+.copy__lines { position: absolute; left: 0; top: 0; width: 100%; }
+/* Rows are placed by JS (top = row * pitch) and slid sideways to hug the silhouette. */
+.line {
+  position: absolute; left: 0; top: 0; white-space: nowrap;
+  font-size: 10px; line-height: 13px; will-change: transform;
+  opacity: 0; filter: blur(8px);
+  transition: opacity 0.7s ease, filter 0.7s ease;
+}
+.line.in { opacity: 1; filter: blur(0); }
+
+/* ---- HUD --------------------------------------------------------------- */
+.hud { position: absolute; inset: 0; pointer-events: none; font-size: 9px; color: var(--c-white); }
+.hud__panel { position: absolute; }
+.hud__panel::before, .hud__panel::after {
+  content: ''; position: absolute; width: 6px; height: 6px; border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.hud__panel::before { left: -8px; top: -8px; border-right: 0; border-bottom: 0; }
+.hud__panel::after { right: -8px; bottom: -8px; border-left: 0; border-top: 0; }
+
+.hud__tl { left: 18px; top: 18px; width: 283px; }
+.hud__map {
+  position: relative; width: 283px; height: 142px; border: 1px solid var(--hair); overflow: hidden;
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 7px),
+    linear-gradient(var(--hair), var(--hair)) center / 1px 100% no-repeat,
+    linear-gradient(var(--hair), var(--hair)) center / 100% 1px no-repeat;
+}
+.hud__fig { position: absolute; left: 50%; top: 50%; width: 9px; height: 20px; transform: translate(-50%, -50%); color: var(--c-white); }
+.hud__sq { position: absolute; left: 0; top: 0; width: 6px; height: 6px; background: var(--c-red); }
+.hud__xy { display: flex; justify-content: space-between; margin-top: 6px; }
+.hud__xy span { background: var(--c-white); color: var(--c-black); padding: 1px 4px; }
+.hud__status { display: flex; justify-content: space-between; margin-top: 10px; line-height: 1.25; }
+.hud__status .r { text-align: right; }
+
+.hud__coord { position: absolute; top: 50%; color: var(--c-hud); }
+.hud__coord--l { left: 18px; }
+.hud__coord--r { right: 18px; }
+
+.hud__bl { left: 18px; bottom: calc(var(--bar-h) + 18px); width: 283px; }
+.hud__proto { margin: 26px 0 18px; display: grid; gap: 3px; }
+.hud__proto p { display: grid; grid-template-columns: 90px 1fr; }
+.hud__proto p span:first-child { color: var(--c-label); }
+.hud__progress { display: flex; align-items: center; gap: 8px; }
+.hud__progress i { position: relative; flex: 1; height: 1px; background: var(--hair); }
+.hud__progress b { position: absolute; inset: 0; background: var(--c-white); transform: scaleX(0); transform-origin: left; }
+
+.hud__tr { right: 18px; top: 18px; width: 300px; }
+.hud__marquee { overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--hair); padding-bottom: 6px; }
+.hud__marquee > div { display: inline-flex; gap: 8px; animation: marquee 22s linear infinite; }
+.hud__marquee i { font-style: normal; color: var(--c-label); }
+.hud__awards { margin-top: 10px; display: grid; gap: 12px; }
+.hud__award { display: grid; grid-template-columns: 96px 1fr; }
+.hud__award ul { list-style: none; display: grid; gap: 2px; }
+.hud__award li { display: flex; justify-content: space-between; }
+.hud__award li:nth-child(n + 4) { color: var(--c-label); }
+.hud__award li:nth-child(n + 6) { color: #3b3b3b; }
+.hud__award li.is-total { color: var(--c-white); margin-top: 4px; }
+.hud__br { position: absolute; right: 18px; bottom: calc(var(--bar-h) + 18px); color: var(--c-label); }
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ---- TEAR / GROUND ------------------------------------------------------ */
+.bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+/* ---- BLOCK 02 ---------------------------------------------------------- */
+.b2 { position: fixed; inset: 0; z-index: 3; visibility: hidden; opacity: 0; color: var(--c-black); pointer-events: none; overflow: hidden; }
+.cross { position: absolute; background: var(--c-red-pure); will-change: transform; }
+.cross--h { left: -10vw; top: 42vh; width: 120vw; height: 15vh; }
+.cross--v { left: 40vw; top: -10vh; width: 11vw; height: 130vh; }
+.b2__numeral {
+  position: absolute; left: 3vw; top: 72vh; transform-origin: left top;
+  font-family: var(--font-mono); font-weight: 400; font-size: 24vh; line-height: 0.8; letter-spacing: -0.06em;
+  display: flex; will-change: transform;
+}
+.b2__head { position: absolute; inset: 0; width: 100%; height: 100%; }
+.b2__words { position: absolute; left: 50%; top: 0; transform: translateX(-50%); display: flex; gap: 22px; font-size: 9px; line-height: 1.15; }
+.words__col { display: flex; flex-direction: column; padding-top: 100vh; will-change: transform; }
+.words__col.is-mirror { text-align: right; }
+.b2__meta { font-size: 9px; }
+.b2__meta-tl { position: absolute; left: 18px; top: 18px; display: flex; gap: 48px; line-height: 1.25; }
+.b2__meta-tr { position: absolute; right: 18px; top: 18px; }
+.b2__meta-bl { position: absolute; left: 18px; bottom: calc(var(--bar-h) + 18px); }
+.b2__meta-br { position: absolute; right: 18px; bottom: calc(var(--bar-h) + 18px); }
+.stamp { position: absolute; width: 34px; height: 34px; border: 1px solid var(--c-black); display: grid; place-items: center; background: var(--c-paper); }
+.stamp svg { width: 18px; height: 18px; }
+.stamp--a { left: 60vw; top: 20vh; }
+.stamp--b { left: 37vw; top: 56vh; }
+.bracket { position: absolute; width: 14px; height: 14px; border: 1px solid var(--c-black); }
+.bracket--a { left: 33vw; top: 44vh; border-right: 0; border-bottom: 0; }
+.bracket--b { left: 66vw; top: 62vh; border-left: 0; border-top: 0; }
+.b2__hint { position: absolute; left: 50%; bottom: calc(var(--bar-h) + 18px); transform: translateX(-50%); font-size: 8px; color: var(--c-slate); }
+
+/* ---- FOOTER ------------------------------------------------------------ */
+.red-sheet {
+  position: fixed; inset: 0; z-index: 4; pointer-events: none;
+  background: var(--c-red-pure); mix-blend-mode: multiply; opacity: 0;
+}
+.ftr { position: fixed; inset: 0; z-index: 5; visibility: hidden; pointer-events: none; color: var(--c-black); }
+.ftr a { pointer-events: auto; }
+.ftr__head {
+  position: absolute; left: 0; right: 0; top: 1.5vh; text-align: center;
+  font-family: var(--font-display); font-weight: 600; font-size: 8.6vw; line-height: 0.8; letter-spacing: -0.02em;
+}
+.ftr__line { display: block; overflow: hidden; }
+.ftr__line > span { display: inline-block; will-change: transform; }
+
+/* the band: black, with an eye-shaped window cut through it (an SVG mask), so the red
+   room and the head behind it show THROUGH the band rather than being drawn on it */
+.ftr__band { position: absolute; left: 10px; right: 10px; top: 47.5vh; height: 22vh; will-change: transform; }
+.ftr__eye { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ftr__band .sq { position: absolute; width: 7px; height: 7px; background: var(--c-red-pure); }
+.sq--tl { left: 12px; top: 12px; } .sq--bl { left: 12px; bottom: 12px; } .sq--tr { right: 12px; top: 12px; }
+.ftr__nav { position: absolute; left: 11.5%; top: 9px; display: flex; gap: 22px; font-size: 10px; color: var(--c-red-pure); }
+.ftr__nav a i { font-style: normal; }
+.ftr__nav a:hover { color: var(--c-white); }
+.ftr__err {
+  position: absolute; right: 12px; bottom: 12px; display: flex; justify-content: space-between; gap: 40px;
+  min-width: 116px; padding: 5px 8px; background: var(--c-red-pure); color: var(--c-black); font-size: 9px;
+}
+.ftr__err:hover { background: var(--c-white); }
+
+.ftr__lower { position: absolute; left: 10px; right: 10px; top: calc(69.5vh + 8px); bottom: 0; will-change: transform; font-size: 10px; }
+.ftr__bars { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ftr__bars a { background: #0a0a0a; color: var(--c-red-pure); padding: 4px 12px; }
+.ftr__bars a:hover { color: var(--c-white); }
+.ftr__cols { position: relative; display: grid; grid-template-columns: 50% 1fr auto; margin-top: 6vh; line-height: 1.35; }
+.ftr__quote { display: flex; gap: 80px; padding-left: 11%; }
+.ftr__notes { list-style: none; display: grid; gap: 5vh; }
+.ftr__notes li { display: grid; grid-template-columns: 26px 1fr; }
+.ftr__notes b { font-weight: 400; }
+.ftr__loc { align-self: start; }
+.ftr__rights { position: absolute; left: 0; bottom: 10px; font-size: 9px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hud__marquee > div { animation: none; }
+  .line { transition: opacity 0.3s; filter: none; }
+}

@@ -1,0 +1,44 @@
+/* ==========================================================================
+   work.css — the endless field, the tube over it, the cursor, the lightbox.
+   ========================================================================== */
+
+.page--work { background: var(--c-black); cursor: none; }
+.page--work a, .page--work button { cursor: pointer; }
+
+.field { position: absolute; inset: 0; overflow: hidden; touch-action: none; user-select: none; }
+.card { position: absolute; left: 0; top: 0; width: 250px; will-change: transform; transform-origin: center; }
+.card__img { width: 250px; height: 330px; overflow: hidden; background: #111; }
+.card__img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.15) contrast(1.05); transition: filter 0.3s; }
+.card:hover .card__img img { filter: none; }
+.card figcaption { display: flex; justify-content: space-between; margin-top: 6px; font-size: 9px; color: var(--c-hud); }
+.card figcaption span:first-child { color: var(--c-red); }
+
+/* the tube: scan lines, a vignette and a cold grade, all DOM, over everything */
+.crt {
+  position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 2px),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.35) 100%);
+  mix-blend-mode: multiply;
+}
+.crt::after { content: ''; position: absolute; inset: 0; background: rgba(40, 140, 130, 0.07); mix-blend-mode: screen; }
+
+.blobs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; image-rendering: pixelated; }
+
+.work-hud { position: absolute; left: 18px; top: 18px; z-index: 6; display: grid; gap: 4px; font-size: 9px; pointer-events: none; }
+.work-hud p:first-child { background: var(--c-white); color: var(--c-black); padding: 1px 4px; }
+
+.cursor-fig { position: fixed; left: 0; top: 0; z-index: 650; width: 9px; height: 20px; pointer-events: none; }
+.cursor-fig svg { width: 9px; height: 20px; }
+
+.fx { position: absolute; }
+
+.lightbox {
+  position: absolute; inset: 0; z-index: 10; display: none;
+  flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(0, 0, 0, 0.92); cursor: default;
+}
+.lightbox.is-open { display: flex; }
+.lightbox canvas { max-width: 86vw; image-rendering: pixelated; }
+.lightbox p { font-size: 10px; }
+.lightbox button { position: absolute; right: 18px; top: 18px; background: var(--c-white); color: var(--c-black); padding: 2px 6px; font-size: 10px; }

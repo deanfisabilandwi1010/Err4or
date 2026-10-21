@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gallery — Your Name</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script>
+    (function () {
+      var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+      if (coarse || window.innerWidth < 1024) document.documentElement.classList.add('gated');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@300;400;500&family=Saira+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-barba="wrapper" data-page="gallery">
+  <div class="gate" aria-hidden="true">
+    <div class="gate__logo" data-logo></div>
+    <p class="gate__msg">THE EXPERIENCE IS BEST VIEWED<br />WITH A DESKTOP</p>
+    <p class="gate__foot">SORRY, NOT SORRY</p>
+  </div>
+
+  <canvas class="grain" aria-hidden="true"></canvas>
+  <div class="wipe" aria-hidden="true"></div>
+
+  <main data-barba="container" data-barba-namespace="gallery" class="page page--gallery">
+    <div class="gal" data-gal>
+      <div class="gal__world" data-world></div>
+    </div>
+    <div class="gal__tint" aria-hidden="true"></div>
+    <div class="gal__hud">
+      <svg class="gal__map" data-map viewBox="0 0 160 100" aria-hidden="true"></svg>
+      <p data-gal-layout>LAYOUT 1 // PATH</p>
+      <p>KEYS 1–4 TO SWITCH // SCROLL TO TRAVEL</p>
+      <p data-gal-index>000 / 024</p>
+    </div>
+  </main>
+
+  <footer class="bar" data-bar></footer>
+</body>
+</html>

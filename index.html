@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Name — Digital Designer</title>
+  <meta name="description" content="Case file of a digital designer. Best viewed on a desktop." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <!-- THE PHONE DOOR, decided before anything else loads (see css/base.css .gate). -->
+  <script>
+    (function () {
+      var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+      if (coarse || window.innerWidth < 1024) document.documentElement.classList.add('gated');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@300;400;500&family=Saira+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-barba="wrapper" data-page="home">
+  <div class="gate" aria-hidden="true">
+    <div class="gate__logo" data-logo></div>
+    <p class="gate__msg">THE EXPERIENCE IS BEST VIEWED<br />WITH A DESKTOP</p>
+    <p class="gate__foot">SORRY, NOT SORRY</p>
+  </div>
+
+  <canvas class="grain" aria-hidden="true"></canvas>
+  <div class="wipe" aria-hidden="true"></div>
+
+  <main data-barba="container" data-barba-namespace="home" class="page page--home">
+    <div class="loader" data-loader aria-hidden="true">
+      <div class="loader__copy" data-loader-copy>
+        <p class="anim-line">ACCESSING CASE FILE</p>
+        <p class="anim-line">SUBJECT 0039 // CLASSIFIED</p>
+        <p class="anim-line">DECRYPTING VISUAL RECORD</p>
+      </div>
+      <div class="loader__pct" data-loader-pct>000</div>
+      <div class="loader__line" data-loader-line></div>
+      <div class="loader__red" data-loader-red></div>
+      <div class="loader__white" data-loader-white></div>
+    </div>
+
+    <section class="b1" data-b1>
+      <div class="b1__grid"></div>
+      <canvas class="b1__fig" data-fig></canvas>
+      <div class="copy" data-copy>
+        <div class="copy__track" data-copy-track>
+          <h1 class="copy__title" data-copy-title></h1>
+          <div class="copy__lines" data-copy-lines></div>
+        </div>
+      </div>
+      <div class="hud" data-hud></div>
+    </section>
+
+    <canvas class="bg" data-bg aria-hidden="true"></canvas>
+
+    <section class="b2" data-b2 aria-label="Subject">
+      <div class="b2__crosses" data-crosses><i class="cross cross--h"></i><i class="cross cross--v"></i></div>
+      <div class="b2__numeral" data-numeral></div>
+      <canvas class="b2__head" data-head></canvas>
+      <div class="b2__words" data-words></div>
+      <div class="b2__meta" data-b2-meta></div>
+      <div class="b2__stamps" data-stamps></div>
+      <p class="b2__hint">CLICK TO SPIN // DRAG TO MOVE // SHIFT + DRAG TO TURN // SHIFT + WHEEL TO SCALE // HOME TO RESET</p>
+    </section>
+
+    <section class="ftr" data-ftr></section>
+  </main>
+
+  <footer class="bar" data-bar></footer>
+</body>
+</html>
