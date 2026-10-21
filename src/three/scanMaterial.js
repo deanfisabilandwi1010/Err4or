@@ -8,8 +8,11 @@
                         uFlatLevel. Block 02's head runs tone .05 + flatten 1 ON
                         PURPOSE: the light is turned right down and the flatten
                         carries it back to a pure white silhouette.
-     uIri / uScan       the thin rainbow scan bands and the 3px scanlines that
-                        make block 01's figure read as a thermal scan.
+     uTint / uShade     the lit colour and the shadow colour; uDuo blends the
+                        light ramp from one to the other (0 = tint only).
+     uDots              an RGB sub-pixel mask, one dot per CSS pixel, so the
+                        surface reads as a screen photographed up close.
+     uIri / uScan       optional rainbow bands, and the 3px scanlines.
      uLo / uHi          the REVEAL BAND. Each layer is only drawn where the
                         fluid mask value rv is in [uLo, uHi). Body [−1,.45),
                         skeleton [.45,9): hovering wipes one into the other.
@@ -39,9 +42,9 @@ const vertex = /* glsl */ `
 
 const fragment = /* glsl */ `
   precision highp float;
-  uniform float uTime, uTone, uFlatten, uFlatLevel, uIri, uScan, uGrain, uSeed;
+  uniform float uTime, uTone, uFlatten, uFlatLevel, uIri, uScan, uGrain, uSeed, uDuo, uDots;
   uniform float uFresnel, uFresnelPow, uUseReveal, uLo, uHi, uRevGlow, uInnerGlow, uDpr;
-  uniform vec3 uTint, uRevTint;
+  uniform vec3 uTint, uShade, uRevTint;
   uniform vec4 uSolid;
   uniform vec2 uResolution;
   uniform sampler2D uReveal;
@@ -71,11 +74,14 @@ const fragment = /* glsl */ `
     float lam = max(dot(n, normalize(vec3(-.4, .7, .6))), 0.);
     float s = uTone * (.25 + .75 * lam);
     s = mix(s, uFlatLevel, clamp(uFlatten, 0., 1.));
-    vec3 base = vec3(s) * uTint;
+    vec3 base = vec3(s) * mix(uTint, mix(uShade, uTint, lam), uDuo);
 
     vec3 iri = hsv2rgb(vec3(fract(px.y / 90. + n.y * .3 + uTime * .02), .72, 1.));
     base = mix(base, base * iri * 1.4, uIri);
     base *= 1. - uScan * step(2., mod(px.y, 3.));
+    float k = mod(floor(px.x) + floor(px.y), 3.);   // offset per row: dots, not stripes
+    vec3 dot3 = vec3(step(k, .5), step(.5, k) * step(k, 1.5), step(1.5, k));
+    base = mix(base, base * dot3 * 2.8, uDots);
 
     float fres = pow(1. - clamp(dot(n, v), 0., 1.), uFresnelPow) * uFresnel;
     base += fres * uTint;
@@ -95,9 +101,9 @@ const fragment = /* glsl */ `
 
 const DEFAULTS = {
   uBreath: 0, uBreathRate: 0.19, uBreathPhase: 0.14, uExtrude: 0,
-  uTone: 1, uFlatten: 0, uFlatLevel: 1, uIri: 0, uScan: 0, uGrain: 0.08, uSeed: 0,
+  uTone: 1, uFlatten: 0, uFlatLevel: 1, uIri: 0, uScan: 0, uGrain: 0.08, uSeed: 0, uDuo: 0, uDots: 0,
   uFresnel: 0, uFresnelPow: 2.5, uUseReveal: 1, uLo: -1, uHi: 9, uRevGlow: 0, uInnerGlow: 0,
-  uTint: new THREE.Color(1, 1, 1), uRevTint: new THREE.Color(1, 1, 1), uSolid: new THREE.Vector4(0, 0, 0, 0),
+  uTint: new THREE.Color(1, 1, 1), uShade: new THREE.Color(1, 1, 1), uRevTint: new THREE.Color(1, 1, 1), uSolid: new THREE.Vector4(0, 0, 0, 0),
 };
 
 /* `shared` carries the uniform OBJECTS every layer of a stage reads (time, the

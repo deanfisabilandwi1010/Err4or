@@ -46,6 +46,7 @@ const frag = /* glsl */ `
     d += (fbm(vUv * 10. + uTime * .6) - .5) * uRadius * .8;   // torn brush edge
     float brush = smoothstep(uRadius, uRadius * .15, d) * uStrength;
     float v = clamp(prev + brush, 0., 1.);
+    v = v >= 0. && v <= 1. ? v : 0.;   // NaN fails both tests: one bad frame must not poison the feedback forever
     gl_FragColor = vec4(v, v, v, 1.);
   }
 `;
@@ -107,7 +108,7 @@ export class Fluid {
     u.uRadius.value = this.radius;
     u.uDecay.value = Math.pow(this.decay, dt * 60);
     u.uTime.value = t;
-    u.uAspect.value = aspect;
+    u.uAspect.value = Number.isFinite(aspect) && aspect > 0 ? aspect : 1; // a 0-high canvas mid-resize
     u.uPrev.value = this.a.texture;
     const r = this.renderer;
     const old = r.getRenderTarget();

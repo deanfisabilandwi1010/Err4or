@@ -7,6 +7,7 @@
 import { OWNER } from '../content.js';
 import { logoSVG } from './logo.js';
 import { onFrame, reducedMotion } from './loop.js';
+import { initSound } from './sound.js';
 
 const NAV = [
   { ns: 'home', href: '/', label: 'INDEX' },
@@ -32,6 +33,7 @@ function initBar() {
   bar.innerHTML = `
     <nav class="bar__nav" aria-label="Main">${navHTML()}</nav>
     <div class="bar__right">
+      <button class="bar__sound" type="button" data-sound>SOUND ON</button>
       <span>${OWNER.gmt}</span><i class="bar__dot">●</i><span data-clock>00:00:00</span>
       <a class="bar__cta" href="${OWNER.contactHref}">${OWNER.contactLabel} <span>+</span></a>
     </div>`;
@@ -44,6 +46,7 @@ function initBar() {
   tickClock();
   setInterval(tickClock, 1000);
   setActiveNav(document.body.dataset.page);
+  if (!document.documentElement.classList.contains('gated')) initSound(bar);
 }
 
 export function setActiveNav(ns) {

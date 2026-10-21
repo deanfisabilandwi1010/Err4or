@@ -3,7 +3,7 @@
 
    Everything in here is PLACEHOLDER copy written for the layout. Replace it
    with your own: name, role, city, coordinates, the case-file narrative,
-   projects and awards. Nothing else in the codebase hard-codes text.
+   projects and the HUD log. Nothing else in the codebase hard-codes text.
    ========================================================================== */
 
 export const OWNER = {
@@ -25,10 +25,23 @@ export const ROLES = ['VISIONARY', 'UI/UX DESIGNER', 'CONCEPTUALIST', 'ART DIREC
 
 export const STATUS = ['TARGET ACQUIRED', 'SUBJECT IS AWARE', 'DO NOT ENGAGE', 'SIGNAL UNSTABLE', 'KEEP DISTANCE'];
 
-export const AWARDS = [
-  { project: 'PROJECT ONE', items: ['SITE OF THE DAY', 'HONORABLE MENTION', 'DEVELOPER AWARD', 'UI AWARD', 'UX AWARD', 'INNOVATION AWARD'] },
-  { project: 'PROJECT TWO', items: ['SITE OF THE DAY', 'HONORABLE MENTION', 'UI AWARD', 'SITE OF THE MONTH'] },
-];
+/* The HUD's error log (top right). Lines are assembled from these pieces by
+   home/syslog.js – a message, a hex address and a state per line, chosen from
+   the line's own number – so the log never repeats a block as it scrolls. */
+export const SYSLOG = {
+  messages: [
+    'SEGMENTATION FAULT', 'NULL POINTER DEREF', 'STACK OVERFLOW', 'HEAP EXHAUSTED',
+    'ACCESS VIOLATION', 'CHECKSUM MISMATCH', 'KERNEL PANIC', 'UNHANDLED EXCEPTION',
+    'BUFFER OVERRUN', 'SIGNAL LOST', 'HANDSHAKE TIMEOUT', 'CORRUPT SECTOR',
+    'PERMISSION DENIED', 'WATCHDOG RESET', 'IDENTITY NOT FOUND', 'SUBJECT UNRESOLVED',
+    'TRACE ROUTE BROKEN', 'DECRYPTION FAILED', 'FRAME DROPPED', 'DEADLOCK DETECTED',
+    'RACE CONDITION', 'CORE DUMPED', 'CLOCK DRIFT', 'MIRROR DESYNC',
+    'FACE MATCH 0.00%', 'MEMORY NOT RELEASED', 'OBSERVER DETECTED', 'FILE 0039 LOCKED',
+    'UNKNOWN OPCODE', 'BAD SECTOR READ', 'INTEGRITY CHECK FAILED', 'ROOT ACCESS REVOKED',
+  ],
+  states: ['FAIL', 'FATAL', 'WARN', 'DENIED', 'RETRY', 'NULL', 'ABORT', '???'],
+  headers: ['> CORE DUMP', '> TRACE', '> SYS.LOG', '> STACK'],
+};
 
 export const CASE_TITLE = 'CASE FILE: THE ONE WHO KEPT LOOKING';
 

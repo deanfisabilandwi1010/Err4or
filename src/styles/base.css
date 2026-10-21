@@ -93,6 +93,17 @@ img, canvas, svg { display: block; }
 .bar__dot { font-style: normal; color: var(--c-red); font-size: 8px; animation: blink 1s steps(2, end) infinite; }
 .bar__cta { display: flex; gap: 8px; align-items: center; height: 16px; padding: 0 8px; background: var(--c-white); color: var(--c-black); }
 .bar__cta:hover { background: var(--c-red); color: var(--c-white); }
+.bar__sound {
+  height: 16px; padding: 0 6px; border: 0; background: none; color: inherit;
+  font: inherit; letter-spacing: inherit; cursor: pointer;
+}
+.bar__sound:hover { background: var(--c-white); color: var(--c-black); }
+.bar__sound.is-muted { opacity: 0.5; }
+.bar__nav a, .bar__right > * { white-space: nowrap; }
+@media (max-width: 760px) {
+  .bar__right > span, .bar__dot { display: none; } /* the clock gives way before the nav does */
+  .bar__nav a { padding: 0 4px; }
+}
 
 .bar { transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1); }
 .is-footer .bar { transform: translateY(100%); } /* the footer carries its own nav and contact */

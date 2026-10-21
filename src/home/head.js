@@ -30,7 +30,28 @@ export const HEAD_CONFIG = {
   outline: '#bdbdbd', outlineWidth: 0.004,
   spinTurns: 2, spinDur: 1.6, spinShrink: 0.08,
   brush: 0.075,
+  /* FITTING THE SKULL. The skull is a separate generation that stands upright
+     and faces straight ahead; the bust looks down at the phone with its face
+     turned 16° to its right (nose at x≈0, the skull's midline was at 0.087).
+     So the skull is turned and tipped to match, about its own centre, then
+     nudged (bust-normalised units, height 1). Checked against cut-away
+     sections of the bust from the front, both sides and three-quarters. */
+  skullYaw: -16, skullPitch: 7, skullOffset: [-0.025, -0.025, 0.02],
 };
+
+/* norm, then the skull's own turn / tip / nudge about its centre */
+function skullMatrix(geo, norm, cfg) {
+  const g = geo.clone().applyMatrix4(norm);
+  g.computeBoundingBox();
+  const c = g.boundingBox.getCenter(new THREE.Vector3());
+  g.dispose();
+  const [ox, oy, oz] = cfg.skullOffset;
+  const rot = new THREE.Euler(THREE.MathUtils.degToRad(cfg.skullPitch), THREE.MathUtils.degToRad(cfg.skullYaw), 0, 'YXZ');
+  return new THREE.Matrix4().makeTranslation(c.x + ox, c.y + oy, c.z + oz)
+    .multiply(new THREE.Matrix4().makeRotationFromEuler(rot))
+    .multiply(new THREE.Matrix4().makeTranslation(-c.x, -c.y, -c.z))
+    .multiply(norm);
+}
 
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
@@ -57,14 +78,14 @@ export async function createHead(canvas, overrides = {}) {
     face: createScanMaterial(stage.shared, { uTone: 0.9, uFlatten: 0.4, uFlatLevel: 0.92, uGrain: 0.05, uLo: cfg.maskHi, uHi: cfg.faceHi, uRevGlow: cfg.edgeGlow, uRevTint: edge }, { side: THREE.DoubleSide }),
     skull: createScanMaterial(stage.shared, { uTone: 0.6, uFresnel: 1, uFresnelPow: 2, uInnerGlow: 0.8, uGrain: 0.05, uLo: cfg.faceHi, uHi: 9, uRevGlow: cfg.edgeGlow, uRevTint: edge }, { side: THREE.DoubleSide }),
   };
-  const add = (geo, mat, order) => {
+  const add = (geo, mat, order, matrix = norm) => {
     const m = new THREE.Mesh(geo, mat);
     m.matrixAutoUpdate = false;
-    m.matrix.copy(norm);
+    m.matrix.copy(matrix);
     m.renderOrder = order;
     inner.add(m);
   };
-  add(skull, mats.skull, 0);
+  add(skull, mats.skull, 0, skullMatrix(skull, norm, cfg));
   add(bust, mats.face, 1);
   add(mask, mats.mask, 2);
   add(mask, mats.outline, 3);

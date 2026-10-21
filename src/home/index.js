@@ -13,7 +13,7 @@
    ========================================================================== */
 
 import gsap from 'gsap';
-import { onFrame, ramp, reducedMotion } from '../core/loop.js';
+import { onFrame, ramp, clamp, reducedMotion } from '../core/loop.js';
 import { disposer } from '../core/lifecycle.js';
 import { createTravel } from '../core/travel.js';
 import { preload, ASSETS } from '../three/assets.js';
@@ -22,6 +22,8 @@ import { runLoader } from './loader.js';
 import { createFigure } from './figure.js';
 import { createHead } from './head.js';
 import { createGround } from './ground.js';
+import { createMiniFigure } from './minimap.js';
+import { createSyslog } from './syslog.js';
 
 export const HOME_CONFIG = {
   copyStart: 0.98,  // where the case file starts, in viewport heights from the top
@@ -34,6 +36,7 @@ export const HOME_CONFIG = {
   block2Len: 1.6,
   footerLen: 1.4,
   glitchEvery: 0.12,
+  logSpeed: 0.35,   // px the HUD's error log travels per px of scroll
 };
 
 export async function mount(root, ctx) {
@@ -51,21 +54,23 @@ export async function mount(root, ctx) {
   const loaderEl = $('[data-loader]');
   const loading = (async () => {
     await preload(Object.values(ASSETS), (p) => (bytes = p)).catch((e) => console.warn('[home] preload', e));
-    const [figure, head] = await Promise.all([
+    const [figure, head, mini] = await Promise.all([
       createFigure($('[data-fig]')).catch((e) => (console.warn('[home] figure fallback:', e), null)),
       createHead($('[data-head]')).catch((e) => (console.warn('[home] head fallback:', e), null)),
+      createMiniFigure($('[data-mini]')).catch((e) => (console.warn('[home] minimap fallback:', e), null)),
     ]);
     let ground = null;
     try { ground = createGround($('[data-bg]')); } catch (e) { console.warn('[home] ground fallback:', e); }
     built = 1;
-    return { figure, head, ground };
+    return { figure, head, ground, mini };
   })();
   if (ctx.first && loaderEl) await runLoader(loaderEl, () => bytes * 0.9 + built * 0.1);
   else loaderEl?.remove();
-  const { figure, head, ground } = await loading;
+  const { figure, head, ground, mini } = await loading;
   if (figure) d(() => figure.dispose()); else root.classList.add('no-figure');
   if (head) d(() => head.dispose());
   if (ground) d(() => ground.dispose());
+  if (mini) { d(() => mini.dispose()); $('[data-map]').classList.add('has-mini'); }
 
   if (head) travel.setFilter((dy, e) => (head.wheel(dy, e) ? 0 : dy));
 
@@ -86,6 +91,7 @@ export async function mount(root, ctx) {
   const hud = $('[data-hud]');
   const progressBar = $('[data-progress]');
   const progressN = $('[data-progress-n]');
+  const log = createSyslog($('[data-log]'));
   let A = 1, B = 2, C = 3, D = 4, vh = innerHeight;
   let tops = [];
   let widths = [];
@@ -110,14 +116,15 @@ export async function mount(root, ctx) {
 
   // ---- HUD live parts ----
   const sq = $('[data-sq]');
+  const map = $('[data-map]');
   const xEl = $('[data-x]');
   const yEl = $('[data-y]');
   let eyeTiltTarget = 0;
   const pad3 = (n) => String(Math.round(n)).padStart(3, '0');
   d.on(window, 'pointermove', (e) => {
-    const u = e.clientX / innerWidth;
-    const v = e.clientY / innerHeight;
-    sq.style.transform = `translate(${u * 277}px, ${v * 136}px)`;
+    const u = clamp(e.clientX / Math.max(1, innerWidth));
+    const v = clamp(e.clientY / Math.max(1, innerHeight));
+    sq.style.transform = `translate(${u * (map.clientWidth - 6)}px, ${v * (map.clientHeight - 6)}px)`;
     xEl.textContent = `X ${pad3(u * 999)}`;
     yEl.textContent = `Y ${pad3(v * 999)}`;
     eyeTiltTarget = (u - 0.5) * 6;
@@ -172,7 +179,9 @@ export async function mount(root, ctx) {
       if (figure) {
         const f = gui.addFolder('figure');
         const u = figure.materials.body.uniforms;
-        f.add(u.uIri, 'value', 0, 1).name('iri');
+        f.add(u.uTone, 'value', 0, 1.5).name('tone');
+        f.add(u.uDots, 'value', 0, 1).name('rgb dots');
+        f.add(u.uIri, 'value', 0, 1).name('rainbow');
         f.add(u.uScan, 'value', 0, 1).name('scan');
         f.add(u.uGrain, 'value', 0, 0.3).name('grain');
         if (figure.materials.skeleton) f.add(figure.materials.skeleton.uniforms.uFresnel, 'value', 0, 3).name('xray fresnel');
@@ -209,9 +218,11 @@ export async function mount(root, ctx) {
       progressBar.style.transform = `scaleX(${p1})`;
       progressN.textContent = String(Math.round(p1 * 100)).padStart(3, '0');
       hud.style.opacity = String(1 - ramp(pT, 0, 0.35));
+      log.update(cur * cfg.logSpeed);
       const b1Live = pT < 1;
       b1.style.visibility = b1Live ? 'visible' : 'hidden';
       if (figure && b1Live) figure.update(dt, t, { scroll01: p1, paint: pT < 0.05 });
+      if (mini && b1Live) mini.update(dt, t);
 
       // THE COPY PARTS AROUND THE FIGURE: each row's inner end sits shapeGap px from the
       // silhouette at that height (read back by figure.js), left rows ending before it,

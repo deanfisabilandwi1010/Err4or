@@ -3,7 +3,7 @@
    stays a skeleton and every word lives in one place.
    ========================================================================== */
 
-import { OWNER, ROLES, STATUS, AWARDS, CASE_TITLE, CASE_LINES, BLOCK2, FOOTER } from '../content.js';
+import { OWNER, ROLES, STATUS, CASE_TITLE, CASE_LINES, BLOCK2, FOOTER } from '../content.js';
 import { logoSVG } from '../core/logo.js';
 import { navHTML } from '../core/chrome.js';
 
@@ -19,18 +19,11 @@ export function buildHome(root) {
 
   // ---- HUD ----
   const marquee = ROLES.map((r) => `<span>${r}</span><i>//</i>`).join('');
-  const awards = AWARDS.map(
-    (a) => `
-      <div class="hud__award">
-        <p class="hud__award-name">${a.project}</p>
-        <ul>${a.items.map((it) => `<li><span>${it}</span><b>X1</b></li>`).join('')}
-          <li class="is-total"><span>[${a.items.length}]</span><b>IN TOTAL</b></li></ul>
-      </div>`
-  ).join('');
   $('[data-hud]').innerHTML = `
     <div class="hud__panel hud__tl">
       <div class="hud__map" data-map>
         <svg class="hud__fig" viewBox="0 0 18 40"><path d="${FIG_PATH}" fill="currentColor"/></svg>
+        <canvas class="hud__mini" data-mini></canvas>
         <i class="hud__sq" data-sq></i>
       </div>
       <div class="hud__xy"><span data-x>X 000</span><span data-y>Y 000</span></div>
@@ -55,7 +48,7 @@ export function buildHome(root) {
     </div>
     <div class="hud__panel hud__tr">
       <div class="hud__marquee"><div>${marquee}${marquee}</div></div>
-      <div class="hud__awards">${awards}</div>
+      <div class="hud__log" aria-hidden="true"><ul data-log></ul></div>
     </div>
     <p class="hud__br">SCROLL OR DRAG // HOVER TO SEE THROUGH</p>`;
 

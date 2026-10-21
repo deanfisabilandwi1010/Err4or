@@ -26,7 +26,7 @@ import { damp, reducedMotion } from '../core/loop.js';
 
 export const FIGURE_CONFIG = {
   height: 0.46, fov: 70, offsetY: 0, lowAngle: 0.05,
-  tone: 0.72, iri: 0.6, scan: 0.45, grain: 0.08,
+  tone: 1, tint: '#66cccc', shade: '#2a2f86', dots: 0.35, iri: 0, scan: 0.25, grain: 0.15,
   idleSpeedDeg: 6, scrollTurnDeg: 540, ease: 8,
   mouseGain: 1, mouseX: 0.06, mouseY: 0.035, mouseEase: 4,
   breath: 0.012, breathRate: 0.19, breathPhase: 0.14,
@@ -93,7 +93,8 @@ export async function createFigure(canvas, overrides = {}) {
 
   const xray = new THREE.Color(cfg.xray);
   const bodyMat = createScanMaterial(stage.shared, {
-    uTone: cfg.tone, uIri: cfg.iri, uScan: cfg.scan, uGrain: cfg.grain,
+    uTone: cfg.tone, uTint: new THREE.Color(cfg.tint), uShade: new THREE.Color(cfg.shade), uDuo: 1, uDots: cfg.dots,
+    uIri: cfg.iri, uScan: cfg.scan, uGrain: cfg.grain,
     uBreath: reducedMotion ? 0 : cfg.breath, uBreathRate: cfg.breathRate, uBreathPhase: cfg.breathPhase,
     uLo: -1, uHi: cfg.split, uRevGlow: cfg.edgeGlow, uRevTint: xray,
   }, { side: THREE.DoubleSide });

@@ -63,6 +63,8 @@
     linear-gradient(var(--hair), var(--hair)) center / 100% 1px no-repeat;
 }
 .hud__fig { position: absolute; left: 50%; top: 50%; width: 9px; height: 20px; transform: translate(-50%, -50%); color: var(--c-white); }
+.hud__mini { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.has-mini .hud__fig { display: none; } /* the flat silhouette stays only if WebGL does not */
 .hud__sq { position: absolute; left: 0; top: 0; width: 6px; height: 6px; background: var(--c-red); }
 .hud__xy { display: flex; justify-content: space-between; margin-top: 6px; }
 .hud__xy span { background: var(--c-white); color: var(--c-black); padding: 1px 4px; }
@@ -85,13 +87,20 @@
 .hud__marquee { overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--hair); padding-bottom: 6px; }
 .hud__marquee > div { display: inline-flex; gap: 8px; animation: marquee 22s linear infinite; }
 .hud__marquee i { font-style: normal; color: var(--c-label); }
-.hud__awards { margin-top: 10px; display: grid; gap: 12px; }
-.hud__award { display: grid; grid-template-columns: 96px 1fr; }
-.hud__award ul { list-style: none; display: grid; gap: 2px; }
-.hud__award li { display: flex; justify-content: space-between; }
-.hud__award li:nth-child(n + 4) { color: var(--c-label); }
-.hud__award li:nth-child(n + 6) { color: #3b3b3b; }
-.hud__award li.is-total { color: var(--c-white); margin-top: 4px; }
+/* The error log rides the scroll (home/syslog.js), faded out at both ends. */
+.hud__log {
+  margin-top: 10px; height: 230px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 70%, transparent);
+  mask-image: linear-gradient(transparent, #000 14%, #000 70%, transparent);
+}
+.hud__log ul { list-style: none; will-change: transform; }
+.hud__log li { display: grid; grid-template-columns: 58px 1fr auto; gap: 8px; height: 12px; line-height: 12px; white-space: nowrap; }
+.hud__log li span:first-child { color: var(--c-label); }
+.hud__log li b { font-weight: inherit; }
+.hud__log li.is-dim { color: var(--c-label); }
+.hud__log li.is-fatal b, .hud__log li.is-fatal span:nth-child(2) { color: var(--c-red); }
+.hud__log li.is-head { color: var(--c-white); margin-top: 0; }
+.hud__log li.is-head span:first-child { color: var(--c-white); }
 .hud__br { position: absolute; right: 18px; bottom: calc(var(--bar-h) + 18px); color: var(--c-label); }
 
 @keyframes marquee { to { transform: translateX(-50%); } }
@@ -167,6 +176,22 @@
 .ftr__notes b { font-weight: 400; }
 .ftr__loc { align-self: start; }
 .ftr__rights { position: absolute; left: 0; bottom: 10px; font-size: 9px; }
+
+/* Narrow windows: the HUD panels split the width in two instead of overlapping,
+   and the log drops its address column. */
+@media (max-width: 760px) {
+  .hud__tl, .hud__bl, .hud__tr { width: calc(50% - 27px); }
+  .hud__map { width: 100%; height: 110px; }
+  .hud__log { height: 150px; }
+  .hud__log li { grid-template-columns: 1fr auto; }
+  .hud__log li span:first-child { display: none; }
+  .hud__log li span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; }
+  .hud__status { flex-direction: column; gap: 6px; }
+  .hud__status .r { text-align: left; }
+  .hud__proto { margin: 14px 0 12px; }
+  .hud__proto p { grid-template-columns: 1fr 1fr; }
+  .hud__br { max-width: calc(50% - 27px); text-align: right; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hud__marquee > div { animation: none; }

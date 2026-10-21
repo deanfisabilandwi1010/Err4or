@@ -31,8 +31,9 @@ export function createFigureStage(canvas, config) {
   const size = { w: 1, h: 1 };
 
   function resize() {
-    const w = canvas.clientWidth || innerWidth;
-    const h = canvas.clientHeight || innerHeight;
+    // a pane being dragged can pass through 0 px; never size anything to zero
+    const w = Math.max(1, canvas.clientWidth || innerWidth);
+    const h = Math.max(1, canvas.clientHeight || innerHeight);
     const dpr = Math.min(devicePixelRatio || 1, cfg.dprCap);
     renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);

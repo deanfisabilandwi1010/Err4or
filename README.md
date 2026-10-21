@@ -19,7 +19,7 @@ Paling bagus dilihat di desktop (lebar ≥ 1024 px). Di HP yang muncul layar mer
 |---|---|
 | Nama, role, kota, koordinat, email, LinkedIn | `src/content.js` → `OWNER` |
 | Teks case file (±60 baris) | `src/content.js` → `CASE_LINES` |
-| Proyek & penghargaan | `src/content.js` → `PROJECTS`, `AWARDS` |
+| Proyek & log error HUD | `src/content.js` → `PROJECTS`, `SYSLOG` |
 | Foto proyek asli | taruh WebP di `public/work/`, isi `src: '/work/nama.webp'` per proyek |
 | Logo | `src/core/logo.js` (path SVG) dan `public/favicon.svg` |
 | Judul halaman | `<title>` di keempat file HTML |
